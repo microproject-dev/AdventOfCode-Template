@@ -3,7 +3,7 @@
 function configure_template {
     echo "Configuring Zig directory in $1 using template at $2"
 
-    touch $1/ziggity
+    cp -r $2/* $1
 }
 
 function run_solutions {
