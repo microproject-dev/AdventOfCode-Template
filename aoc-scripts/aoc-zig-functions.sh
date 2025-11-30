@@ -27,5 +27,21 @@ function run_solutions {
 }
 
 function test_solution {
-    exit 1
+    echo "Testing Zig solution for $1 part $2"
+
+    pushd $1
+
+    case $2 in
+        partA)
+            zig build --summary all testPartA
+            ;;
+        partB)
+            zig build --summary all testPartB
+            ;;
+        *)
+            zig build --summary all testAll
+            ;;
+    esac
+
+    popd
 }
