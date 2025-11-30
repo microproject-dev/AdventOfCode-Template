@@ -1,4 +1,4 @@
-source .aocrc
+#!/usr/bin/env bash
 
 LANGUAGE=${AOC_LANGUAGE:=Python}
 

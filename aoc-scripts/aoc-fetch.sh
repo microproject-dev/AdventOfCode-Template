@@ -1,6 +1,4 @@
-source .env
-source .aocrc
-soruce .aoc_current
+#!/usr/bin/env bash
 
 YEAR=${AOC_YEAR:=2024}
 

@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
 
+source .env
 source .aocrc
+
+if [ -e .aoc_current ]
+then
+    source .aoc_current
+fi
 
 YEAR=${AOC_YEAR:=2024}
 LANGUAGE=${AOC_LANGUAGE:=Python}
 
-# Script directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Root directory
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 function show_usage {
     echo "AoC Initialization and Run Tool"
@@ -47,7 +53,6 @@ esac
 
 # Parse command and options
 COMMAND=""
-DAY=${AOC_DAY:=""}
 
 # First argument is the command
 if [[ $# -gt 0 ]]; then
@@ -57,22 +62,8 @@ fi
 
 # Validate command
 case $COMMAND in
-    init)
-        if [ -z "$DAY" ] 
-        then
-            echo "Error: No day specified on init"
-            show_usage
-            exit 2
-        fi
-        # Export parsed values for subscripts
-        export AOC_DAY="$DAY"
-        export AOC_LANGUAGE="$LANGUAGE"
-        ;;
-    fetch)
+    init|fetch|run|test)
         # Valid command
-        ;;
-    run|test)
-        export AOC_LANGUAGE="$LANGUAGE"
         ;;
     "")
         echo "Error: No command specified" >&2
@@ -86,8 +77,12 @@ case $COMMAND in
         ;;
 esac
 
+export AOC_YEAR=${YEAR}
+export AOC_LANGUAGE=${LANGUAGE}
+export AOC_DAY=${AOC_DAY}
+
 # Dispatch to subscript
-${SCRIPT_DIR}/aoc-scripts/aoc-${COMMAND}.sh $@
+${DIR}/aoc-scripts/aoc-${COMMAND}.sh $DIR $@
 if [ $? -ne 0 ]
 then
     show_usage

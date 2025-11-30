@@ -1,22 +1,12 @@
 #!/usr/bin/env bash
 
-source .aocrc
-
 LANGUAGE=${AOC_LANGUAGE:=Python}
 
 # Script directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DIR=$1
+shift
 
-case $LANGUAGE in
-    zig)
-        # Valid command
-        ;;
-    *)
-        echo "Error: Language: $LANGUAGE" unsupported >&2
-        show_usage
-        exit 2
-        ;;
-esac
+source $DIR/aoc-scripts/aoc-${LANGUAGE}-functions.sh
 
 DAY=${AOC_DAY:=""}
 FORCE=false
@@ -53,6 +43,25 @@ then
 fi
 
 # Export parsed values for subscripts
-echo "AOC_DAY=$DAY" > ${SCRIPT_DIR}/.aoc_current
+echo "AOC_DAY=$DAY" > ${DIR}/.aoc_current
 
-echo "Some init stuff"
+DAY_SLUG=$(printf "day%02d-%s" $DAY $LANGUAGE)
+
+if [ -e  "$DIR/$DAY_SLUG" ]
+then
+    if [ "$FORCE" = true ]
+    then
+        echo "$DAY_SLUG already exists, use of LETHAL FORCE AUTHORIZED"
+        rm -rf $DIR/$DAY_SLUG
+    else
+        echo "$DAY_SLUG already exists, use of LETHAL FORCE NOT AUTHORIZED. Aborting."
+        exit 1
+    fi
+fi
+
+echo "Creating $DAY_SLUG"
+mkdir $DIR/$DAY_SLUG
+
+echo "Running language specific initialization"
+
+configure_template $DAY_SLUG $DIR/templates/template-${LANGUAGE}

@@ -1,5 +1,4 @@
-source .aocrc
-source .aoc_current
+#!/usr/bin/env bash
 
 DAY=${AOC_DAY:=""}
 LANGUAGE=${AOC_LANGUAGE:=Python}
