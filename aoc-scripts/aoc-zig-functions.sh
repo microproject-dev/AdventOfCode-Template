@@ -7,7 +7,23 @@ function configure_template {
 }
 
 function run_solutions {
-    exit 1
+    echo "Running Zig solution for $1 part $2"
+
+    pushd $1
+
+    case $2 in
+        partA)
+            zig build runPartA
+            ;;
+        partB)
+            zig build runPartB
+            ;;
+        *)
+            zig build runAll
+            ;;
+    esac
+
+    popd
 }
 
 function test_solution {

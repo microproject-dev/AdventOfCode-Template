@@ -3,8 +3,14 @@
 DAY=${AOC_DAY:=""}
 LANGUAGE=${AOC_LANGUAGE:=Python}
 
-PART_A=false
-PART_B=false
+# Script directory
+DIR=$1
+shift
+
+source $DIR/aoc-scripts/aoc-${LANGUAGE}-functions.sh
+
+PART_A=""
+PART_B=""
 
 # Parse remaining options
 while [[ $# -gt 0 ]]; do
@@ -44,4 +50,21 @@ then
     exit 2
 fi
 
-echo "Some running stuff"
+DAY_SLUG=$(printf "day%02d-%s" $DAY $LANGUAGE)
+
+if [ ! -e  "$DIR/$DAY_SLUG" ]
+then
+    echo "$DAY_SLUG Does not exist. Aborting."
+    exit 1
+fi
+
+if [ $PART_A -a $PART_B ]
+then
+    run_solutions $DAY_SLUG all
+elif [ $PART_A ]
+then
+    run_solutions $DAY_SLUG partA
+elif [ $PART_B ]
+then
+    run_solutions $DAY_SLUG partB
+fi
