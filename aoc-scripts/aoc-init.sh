@@ -6,8 +6,6 @@ LANGUAGE=${AOC_LANGUAGE:=Python}
 DIR=$1
 shift
 
-source $DIR/aoc-scripts/aoc-${LANGUAGE}-functions.sh
-
 DAY=${AOC_DAY:=""}
 FORCE=""
 
@@ -16,6 +14,10 @@ while [[ $# -gt 0 ]]; do
     case $1 in
         --day)
             DAY="$2"
+            shift 2
+            ;;
+        --lang)
+            LANGUAGE="$2"
             shift 2
             ;;
         --force)
@@ -42,8 +44,11 @@ then
     exit 2
 fi
 
+source $DIR/aoc-scripts/aoc-${LANGUAGE}-functions.sh
+
 # Export parsed values for subscripts
 echo "AOC_DAY=$DAY" > ${DIR}/.aoc_current
+echo "AOC_LANGUAGE=$LANGUAGE" >> ${DIR}/.aoc_current
 
 DAY_SLUG=$(printf "day%02d-%s" $DAY $LANGUAGE)
 

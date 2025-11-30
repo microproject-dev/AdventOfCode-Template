@@ -2,11 +2,45 @@ require "rake"
 require "minitest/test_task"
 
 # Simple task to run the solution
-desc "Run the Advent of Code solution"
-task :run, [:input_file] do |t, args|
+desc "Run the Advent of Code solution for PartA"
+task :runPartA, [:input_file] do |t, args|
   require_relative "solution"
 
-  input_file = args[:input_file] || "input.txt"
+  input_file = args[:input_file] || "input/input.txt"
+
+  unless File.exist?(input_file)
+    abort "Error: Input file not found at path: #{input_file}"
+  end
+
+  input_data = File.read(input_file)
+  solver = Solution.new(input_data)
+
+  puts "--- Advent of Code Solution Part A---"
+  puts "Part A: #{solver.part1}"
+end
+
+desc "Run the Advent of Code solution for PartB"
+task :runPartB, [:input_file] do |t, args|
+  require_relative "solution"
+
+  input_file = args[:input_file] || "input/input.txt"
+
+  unless File.exist?(input_file)
+    abort "Error: Input file not found at path: #{input_file}"
+  end
+
+  input_data = File.read(input_file)
+  solver = Solution.new(input_data)
+
+  puts "--- Advent of Code Solution PartB---"
+  puts "Part B: #{solver.part2}"
+end
+
+desc "Run the Advent of Code solution all"
+task :runAll, [:input_file] do |t, args|
+  require_relative "solution"
+
+  input_file = args[:input_file] || "input/input.txt"
 
   unless File.exist?(input_file)
     abort "Error: Input file not found at path: #{input_file}"
@@ -16,8 +50,8 @@ task :run, [:input_file] do |t, args|
   solver = Solution.new(input_data)
 
   puts "--- Advent of Code Solution ---"
-  puts "Part 1: #{solver.part1}"
-  puts "Part 2: #{solver.part2}"
+  puts "Part A: #{solver.part1}"
+  puts "Part B: #{solver.part2}"
 end
 
 # Minitest Rake Task

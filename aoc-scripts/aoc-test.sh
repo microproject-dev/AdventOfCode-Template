@@ -7,8 +7,6 @@ LANGUAGE=${AOC_LANGUAGE:=Python}
 DIR=$1
 shift
 
-source $DIR/aoc-scripts/aoc-${LANGUAGE}-functions.sh
-
 PART_A=""
 PART_B=""
 
@@ -31,6 +29,10 @@ while [[ $# -gt 0 ]]; do
             PART_B=true
             shift
             ;;
+        --)
+            shift
+            break
+            ;;
         *)
             echo "Error: Unknown option: $1" >&2
             exit 2
@@ -49,6 +51,11 @@ then
     echo "Error: No language found in env or provided"
     exit 2
 fi
+
+source $DIR/aoc-scripts/aoc-${LANGUAGE}-functions.sh
+
+echo "AOC_DAY=$DAY" > ${DIR}/.aoc_current
+echo "AOC_LANGUAGE=$LANGUAGE" >> ${DIR}/.aoc_current
 
 DAY_SLUG=$(printf "day%02d-%s" $DAY $LANGUAGE)
 

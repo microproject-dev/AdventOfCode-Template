@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+function lang_usage {
+    echo "Zig Language Extension"
+    echo ""
+    echo "Configuration is normal copy of template"
+    echo "Run functions as normal"
+    echo "Tests are extracted from the part1 and part2 files respectively"
+}
+
 function configure_template {
     echo "Configuring Zig directory in $1 using template at $2"
 
@@ -9,7 +17,7 @@ function configure_template {
 function run_solutions {
     echo "Running Zig solution for $1 part $2"
 
-    pushd $1
+    pushd $1 >&2
 
     case $2 in
         partA)
@@ -23,13 +31,13 @@ function run_solutions {
             ;;
     esac
 
-    popd
+    popd >&2
 }
 
 function test_solution {
     echo "Testing Zig solution for $1 part $2"
 
-    pushd $1
+    pushd $1 >&2
 
     case $2 in
         partA)
@@ -43,5 +51,5 @@ function test_solution {
             ;;
     esac
 
-    popd
+    popd >&2
 }

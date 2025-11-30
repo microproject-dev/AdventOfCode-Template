@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 
-source .env
-source .aocrc
+if [ -e .env ]
+then
+    source .env
+fi
+
+if [ -e .aocrc ]
+then
+    source .aocrc
+fi
 
 if [ -e .aoc_current ]
 then
@@ -20,7 +27,7 @@ function show_usage {
     echo "aoc init --day <Day Number> [--lang <Language> --force]"
     echo "  Initializes the day specified with the appropriate language template"
     echo "  This command will set the 'current' day, allowing other commands to omit the switch"
-    
+    echo "  This command will set the 'current' language, allowing other commands to omit the switch"
     echo "  --day <Day Number> day"
     echo "  --lang specifies a language otherwise the default ($LANGUAGE) is used from .aocrc (or Python)"
     echo "  --force if this day already is initialized, purge and re-initialize THIS IS DESTRUCTIVE"
@@ -31,17 +38,23 @@ function show_usage {
     echo "  --force if this input is already downloaded, force redownload"
     echo "  --wait if before the contest open, will wait until the next start time"
     echo ""
-    echo "aoc run|test [--day <Day Number> --lang <Language> --partA --partB]"
+    echo "aoc run|test [--day <Day Number> --lang <Language> --partA --partB] [-- [Additional Args]]"
     echo "  Run or test a specified day/language for a given part (or both if not specified)"
+    echo "  This command will set the 'current' day, allowing other commands to omit the switch"
     echo "  This command will set the 'current' language, allowing other commands to omit the switch"
     echo "  --day <Day Number> day"
     echo "  --lang specifies a language otherwise the default ($LANGUAGE) is used from .aocrc (or Python)"
     echo "  --partA run/test partA"
     echo "  --partB run/test partB"
+    echo "  -- Ends option parsing and passes any additional args to the program"
+    echo ""
+
+    source $DIR/aoc-scripts/aoc-${LANGUAGE}-functions.sh
+    lang_usage
 }
 
 case $LANGUAGE in
-    zig)
+    zig|ruby)
         # Valid command
         ;;
     *)
@@ -64,6 +77,10 @@ fi
 case $COMMAND in
     init|fetch|run|test)
         # Valid command
+        ;;
+    -h)
+        show_usage
+        exit 0
         ;;
     "")
         echo "Error: No command specified" >&2

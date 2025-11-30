@@ -7,8 +7,6 @@ LANGUAGE=${AOC_LANGUAGE:=Python}
 DIR=$1
 shift
 
-source $DIR/aoc-scripts/aoc-${LANGUAGE}-functions.sh
-
 PART_A=""
 PART_B=""
 
@@ -31,6 +29,10 @@ while [[ $# -gt 0 ]]; do
             PART_B=true
             shift
             ;;
+        --)
+            shift
+            break
+            ;;
         *)
             echo "Error: Unknown option: $1" >&2
             exit 2
@@ -50,6 +52,11 @@ then
     exit 2
 fi
 
+source $DIR/aoc-scripts/aoc-${LANGUAGE}-functions.sh
+
+echo "AOC_DAY=$DAY" > ${DIR}/.aoc_current
+echo "AOC_LANGUAGE=$LANGUAGE" >> ${DIR}/.aoc_current
+
 DAY_SLUG=$(printf "day%02d-%s" $DAY $LANGUAGE)
 
 if [ ! -e  "$DIR/$DAY_SLUG" ]
@@ -58,13 +65,13 @@ then
     exit 1
 fi
 
-if [ $PART_A -a $PART_B ]
+if [ -z "$PART_A" -a -z "$PART_B" ]
 then
-    run_solutions $DAY_SLUG all
+    run_solutions $DAY_SLUG all $@
 elif [ $PART_A ]
 then
-    run_solutions $DAY_SLUG partA
+    run_solutions $DAY_SLUG partA $@
 elif [ $PART_B ]
 then
-    run_solutions $DAY_SLUG partB
+    run_solutions $DAY_SLUG partB $@
 fi
