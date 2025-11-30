@@ -1,3 +1,9 @@
 .zig-cache/
 zig-out/
 *.o
+
+#AoC doesn't want inputs in git repos
+input.txt
+
+#Don't leak my cookie
+.env
