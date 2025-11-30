@@ -7,3 +7,6 @@ input.txt
 
 #Don't leak my cookie
 .env
+
+#Internal
+.aoc_current

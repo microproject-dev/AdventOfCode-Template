@@ -80,6 +80,7 @@ esac
 export AOC_YEAR=${YEAR}
 export AOC_LANGUAGE=${LANGUAGE}
 export AOC_DAY=${AOC_DAY}
+export AOC_SESSION=${AOC_SESSION}
 
 # Dispatch to subscript
 ${DIR}/aoc-scripts/aoc-${COMMAND}.sh $DIR $@

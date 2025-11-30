@@ -9,7 +9,7 @@ shift
 source $DIR/aoc-scripts/aoc-${LANGUAGE}-functions.sh
 
 DAY=${AOC_DAY:=""}
-FORCE=false
+FORCE=""
 
 # Parse remaining options
 while [[ $# -gt 0 ]]; do
@@ -49,7 +49,7 @@ DAY_SLUG=$(printf "day%02d-%s" $DAY $LANGUAGE)
 
 if [ -e  "$DIR/$DAY_SLUG" ]
 then
-    if [ "$FORCE" = true ]
+    if [ $FORCE ]
     then
         echo "$DAY_SLUG already exists, use of LETHAL FORCE AUTHORIZED"
         rm -rf $DIR/$DAY_SLUG
