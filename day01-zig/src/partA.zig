@@ -11,12 +11,32 @@ pub fn main() !void {
 
     const out = try solve(allocator, input);
     defer allocator.free(out);
-    std.debug.print("PartB: {s}\n", .{out});
+    std.debug.print("PartA: {s}\n", .{out});
 }
 
 pub fn solve(allocator: std.mem.Allocator, input: []const u8) ![]const u8 {
-    _ = input;
-    return std.fmt.allocPrint(allocator, "", .{});
+    // std.debug.print("Input: {s}", .{input});
+    var parsed = try common.parseInput(allocator, input);
+    defer parsed.deinit(allocator);
+    // std.debug.print("{any}", .{parsed});
+
+    var wheel: i32 = 50;
+    var zeros: u32 = 0;
+    // std.debug.print("{d}\n", .{wheel});
+    for (parsed.items) |a| {
+        wheel += a;
+        if (wheel > 99) {
+            wheel = @mod(wheel, 100);
+        }
+        while (wheel < 0) {
+            wheel += 100;
+        }
+        if (wheel == 0) {
+            zeros += 1;
+        }
+        // std.debug.print("{d} -> {d}\n", .{ a, wheel });
+    }
+    return std.fmt.allocPrint(allocator, "{d}", .{zeros});
 }
 
 test "simple test" {

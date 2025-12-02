@@ -65,7 +65,7 @@ then
     exit 1
 fi
 
-if [ $PART_A -a $PART_B ]
+if [ -z "$PART_A" -a -z "$PART_B" ]
 then
     test_solution $DAY_SLUG all
 elif [ $PART_A ]
