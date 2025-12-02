@@ -10,6 +10,7 @@ shift
 
 FORCE=""
 WAIT=""
+SCHED=""
 
 # Parse remaining options
 while [[ $# -gt 0 ]]; do
@@ -29,6 +30,10 @@ while [[ $# -gt 0 ]]; do
         --wait)
             WAIT=true
             shift
+            ;;
+        --sched)
+            SCHED="$2"
+            shift 2
             ;;
         *)
             echo "Error: Unknown option: $1" >&2
@@ -82,26 +87,27 @@ then
     fi
 fi
 
-# Wait until puzzle is available (midnight EST on the given day)
-    
-# Puzzle releases at midnight EST (UTC-5, or UTC-4 during DST)
-# For simplicity, we'll use EST (UTC-5) since AoC runs in December (no DST)
-release_date="${YEAR}-12-$(printf "%02d" "$DAY")"
-
-# Get release timestamp in EST
-# We need to convert EST midnight to our local time
-release_epoch=""
-if date --version >/dev/null 2>&1; then
-    # GNU date
-    release_epoch=$(TZ="America/New_York" date -d "${release_date} 00:00:00" +%s 2>/dev/null)
+if [ $SCHED ]
+then
+    sched_time_whole=$(awk -F',' -v day="$DAY" '$1 == day {print $2; exit}' "$SCHED")
+    release_date=$(echo $sched_time_whole | cut -d '[' -f1)
+    release_date_tz=$(echo $sched_time_whole | cut -d '[' -f2 | cut -d ']' -f1)
 else
-    # BSD date (macOS)
-    release_epoch=$(TZ="America/New_York" date -j -f "%Y-%m-%d %H:%M:%S" "${release_date} 00:00:00" +%s 2>/dev/null)
+    release_date="${YEAR}-12-$(printf "%02d" "$DAY")T00:00:00"
+    release_date_tz="America/New_York"
 fi
 
-if [[ -z "$release_epoch" ]]; then
+if date --version >/dev/null 2>&1; then
+    # GNU date
+    release_epoch=$(TZ="$release_date_tz" date -d "${release_date}" +%s 2>/dev/null)
+else
+    # BSD date (macOS)
+    release_epoch=$(TZ="$release_date_tz" date -j -f "%Y-%m-%dT%H:%M:%S" "${release_date}" +%s 2>/dev/null)
+fi
+
+if [ -z "$release_epoch" ]; then
     echo "Error: Could not calculate release time" >&2
-    return 1
+    exit 1
 fi
 
 now_epoch=$(date +%s)
@@ -126,7 +132,7 @@ then
     echo "(Press Ctrl+C to cancel)"
 
     # Set up trap for clean exit on Ctrl+C
-    trap 'echo ""; echo "Wait cancelled."; exit 130' INT
+    trap 'echo ""; echo "Wait cancelled."; exit 0' INT
 
     # Sleep until release time
     sleep "$wait_seconds"
