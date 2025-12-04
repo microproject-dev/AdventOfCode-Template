@@ -115,7 +115,7 @@ now_epoch=$(date +%s)
 # Calculate wait time
 wait_seconds=$((release_epoch - now_epoch))
 
-if [ $wait_seconds -gt 0 -a $WAIT ]
+if [ $wait_seconds -gt 0 -a -n "$WAIT" ]
 then
     # Format release time for display
     release_display=""
