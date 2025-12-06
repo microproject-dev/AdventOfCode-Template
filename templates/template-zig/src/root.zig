@@ -7,9 +7,7 @@ pub fn parseInput(allocator: std.mem.Allocator, input: []const u8) !std.array_li
 
     var it = std.mem.splitScalar(u8, input, '\n');
     while (it.next()) |t| {
-        if (t.len == 0) {
-            break;
-        }
+        _ = t;
     }
 
     return output;

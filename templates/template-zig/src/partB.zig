@@ -15,8 +15,7 @@ pub fn main() !void {
 }
 
 pub fn solve(allocator: std.mem.Allocator, input: []const u8) ![]const u8 {
-    var parsed = try common.parseInput(allocator, input);
-    defer parsed.deinit(allocator);
+    _ = input;
     return std.fmt.allocPrint(allocator, "", .{});
 }
 
@@ -24,6 +23,15 @@ test "simple test" {
     const allocator = std.testing.allocator;
     const input =
         \\L68
+        \\L30
+        \\R48
+        \\L5
+        \\R60
+        \\L55
+        \\L1
+        \\L99
+        \\R14
+        \\L82
     ;
 
     const out = try solve(allocator, input);
